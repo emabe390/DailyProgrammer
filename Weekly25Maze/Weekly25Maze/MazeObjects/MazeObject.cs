@@ -22,5 +22,15 @@ namespace Weekly25Maze.MazeObjects
         }
 
         public abstract void SetCoordinate(int x, int y);
+
+        public bool IsSquishable()
+        {
+            return (!VisualApperance().Equals("#") && !VisualApperance().Equals("X"));
+        }
+
+        internal void SetCoordinate(Tuple<int, int> tuple)
+        {
+            SetCoordinate(tuple.Item1, tuple.Item2);
+        }
     }
 }

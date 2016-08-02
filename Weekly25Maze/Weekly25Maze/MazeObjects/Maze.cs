@@ -67,11 +67,12 @@ namespace Weekly25Maze.MazeObjects
 
             return p;
         }
-
+        private int tick = 0;
         internal void Tick()
         {
             Console.Clear();
             PrintGame();
+            Console.WriteLine("Tick: [{0}]", tick++);
         }
 
 
@@ -102,6 +103,20 @@ namespace Weekly25Maze.MazeObjects
             extraSpace = new Space();
             player.SetCoordinate(mo.GetCoordinate().Item1,mo.GetCoordinate().Item2);
             actualMaze[player.y][player.x] = player;
+        }
+
+        internal void PushSquare(MazeObject pushThis, MazeObject toHere, Player player)
+        {
+            extraSpace.SetCoordinate(pushThis.GetCoordinate());
+            Place(extraSpace);
+            pushThis.SetCoordinate(toHere.GetCoordinate());
+            Place(pushThis);
+            MovePlayer(extraSpace, player);
+        }
+
+        private void Place(MazeObject obj)
+        {
+            actualMaze[obj.GetCoordinate().Item2][obj.GetCoordinate().Item1] = obj;
         }
 
         internal bool GetMazeObject(int x, int y, out MazeObject mazeobject)

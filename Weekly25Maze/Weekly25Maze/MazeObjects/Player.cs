@@ -82,6 +82,13 @@ namespace Weekly25Maze.MazeObjects
                 } else if (mo.VisualApperance().Equals("X"))
                 {
                     g.hasWon = true;
+                } else if (mo.VisualApperance().Equals("#"))
+                {
+                    MazeObject nextMo;
+                    if(maze.GetMazeObject(dx+dx+x,dy+dy+y,out nextMo) && nextMo.IsSquishable())
+                    {
+                        maze.PushSquare(mo, nextMo, this);
+                    }
                 }
             }
         }

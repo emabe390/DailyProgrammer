@@ -63,6 +63,7 @@ namespace Weekly25Maze
                     case (ConsoleKey.DownArrow): player.Move(Direction.DOWN); break;
                     case (ConsoleKey.RightArrow): player.Move(Direction.RIGHT); break;
                     case (ConsoleKey.LeftArrow): player.Move(Direction.LEFT); break;
+                    case (ConsoleKey.D): hasDied = true; break;
                     default: break;
                 }
             }
