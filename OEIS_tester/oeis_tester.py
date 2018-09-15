@@ -31,14 +31,14 @@ def test_against_oeis(call_id, function="default", minimum_value="default", maxi
 			maximum_value = max(data)
 	print_points = find_print_points(minimum_value, maximum_value, number_of_prints)
 	
-	print "%s testing between %i and %i" % (function_name, minimum_value, maximum_value)
+	p("%s testing between %i and %i" % (function_name, minimum_value, maximum_value), force=True)
 	for x in range(minimum_value, maximum_value+1):
 		if len(data)==0:
 			p("Maximum value outside of data (%i)", x, force=True)
 			break
 		if print_percentage and x in print_points:
 			print_points.remove(x)
-			print (number_of_prints-len(print_points))*(100/number_of_prints), "% (", x, ")"
+			p((number_of_prints-len(print_points))*(100/number_of_prints), "% (", x, ")", force=True)
 		res = function(x)
 		if is_sequence is True:
 			#the data is a sequence!
@@ -49,8 +49,6 @@ def test_against_oeis(call_id, function="default", minimum_value="default", maxi
 						return False
 					passing = False
 					p("%s: Error at %i, expected %i, got %i" % (function_name, x, seq[x], res))
-			else:
-				data.pop(0)
 		else:
 			if res is False:
 				if x == data[0] or (x>data[0] and x in data):
@@ -70,9 +68,8 @@ def test_against_oeis(call_id, function="default", minimum_value="default", maxi
 						p("%s: Error at %i, expected False, got True" % (function_name, x))
 				else:
 					data.pop(0)
-				#print "Found working value at %i", x
-	if (maximum_value is not "default" or minimum_value is not "default") and len(data) is not 0:
-		print " Not enought values tried in %s, still %i left" % (function_name, len(data))
+	if (maximum_value is "default" and minimum_value is "default") and len(data) is not 0:
+		p(" Not enought values tried in %s, still %i left" % (function_name, len(data)), force=True)
 	return passing
 
 def p(x, force=False):
@@ -87,7 +84,7 @@ def call_oeis(id_):
 		D = {x:y for x,y in s}
 		return D
 	except ValueError:
-		print "Unknown OEIS-sequence \"%s\"" % id_
+		p("Unknown OEIS-sequence \"%s\"" % id_,force=True)
 		sys.exit(-1)
 
 if __name__ == "__main__":
