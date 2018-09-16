@@ -8,7 +8,7 @@ quick_fail = False
 def find_print_points(min, max, number):
 	return [math.floor(min + (max-min)/float(number) * k) for k in range(0,number)]
 
-def test_against_oeis(call_id, function="default", minimum_value="default", maximum_value="default", print_percentage=False, number_of_prints=20):
+def test_against_oeis(call_id, function="default", minimum_value="default", maximum_value="default", print_percentage=False, number_of_prints=20, is_sequence=False):
 	seq = call_oeis(call_id)
 	data = seq.values()
 	data.sort()
@@ -21,7 +21,6 @@ def test_against_oeis(call_id, function="default", minimum_value="default", maxi
 		function=globals()[function_name]
 	
 	function_name = function.__name__
-	is_sequence = is_sequence_dict[function_name]
 	if minimum_value == "default":
 		minimum_value = 1
 	if maximum_value == "default":
@@ -45,27 +44,27 @@ def test_against_oeis(call_id, function="default", minimum_value="default", maxi
 			if x not in seq.keys():
 				p(x, force=True)
 			if seq[x] != res:
+					p("%s: Error at %i, expected %i, got %i" % (function_name, x, seq[x], res))
 					if quick_fail is True:
 						return False
 					passing = False
-					p("%s: Error at %i, expected %i, got %i" % (function_name, x, seq[x], res))
 		else:
 			if res is False:
 				if x == data[0] or (x>data[0] and x in data):
+					p("%s: Error at %i, expected True, got False" % (function_name, x))
 					if quick_fail is True:
 						return False
 					passing = False
-					p("%s: Error at %i, expected True, got False" % (function_name, x))
 						
 			else:
 				if not x == data[0]:
 					if x in data:
 						data.remove(x)
 					else:
+						p("%s: Error at %i, expected False, got True" % (function_name, x))
 						if quick_fail is True:
 							return False
 						passing = False
-						p("%s: Error at %i, expected False, got True" % (function_name, x))
 				else:
 					data.pop(0)
 	if (maximum_value is "default" and minimum_value is "default") and len(data) is not 0:
@@ -86,11 +85,12 @@ def call_oeis(id_):
 	except ValueError:
 		p("Unknown OEIS-sequence \"%s\"" % id_,force=True)
 		sys.exit(-1)
-
+		
 if __name__ == "__main__":
 	import oeis_tests
 	if len(sys.argv) is 1:
 		oeis_tests.test()
 	else:
 		for x in range (1, len(sys.argv)):
+			print "testing", sys.argv[x]
 			oeis_tests.test(sys.argv[x])
